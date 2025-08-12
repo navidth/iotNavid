@@ -1,27 +1,36 @@
 import React, { useEffect, useRef, useState, useMemo } from "react";
-import Globe from "react-globe.gl";
+import Globe, { GlobeMethods } from "react-globe.gl";
 import LoadingSpinner from "../common/LoadingSpinner";
 import ErrorModal from "../common/ErrorModal";
 import useWindow from "@/hooks/useWindow";
 
+type PropertiesProps = Record<string, string | number | null>
+type Coordinate = [number, number];
+type LinearRing = Coordinate[];
+type PolygonCoordinates = LinearRing[];
+type MultiPolygonCoordinates = PolygonCoordinates[];
+type Geometry =
+      | { type: "Polygon"; coordinates: PolygonCoordinates }
+      | { type: "MultiPolygon"; coordinates: MultiPolygonCoordinates };
+
 type Feature = {
-      properties: Record<string, any>;
-      geometry: any;
+      properties: PropertiesProps;
+      geometry: Geometry;
 };
 
 const tileEarthNight = "//cdn.jsdelivr.net/npm/three-globe/example/img/earth-night.jpg";
 
 export default function GlobeClient() {
       const size = useWindow()
-      const globeEl = useRef<any>(null);
+      const globeEl = useRef<GlobeMethods>(undefined);
       const [countries, setCountries] = useState<Feature[] | null>(null);
-      const [userCountryCode, setUserCountryCode] = useState<string | null>("IR");
+      const [userCountryCode, setUserCountryCode] = useState<string | null>(null);
       const [loading, setLoading] = useState<boolean>(true);
 
       useEffect(() => {
             async function fetchCountry() {
                   try {
-                        const r = await fetch(`${window.location.href}api/geoip`);
+                        const r = await fetch("http://localhost:3000/api/geoip");
                         const j = await r.json();
                         if (j.countryCode) setUserCountryCode(j.countryCode.toUpperCase());
                   } catch (e) {
@@ -46,7 +55,7 @@ export default function GlobeClient() {
       }, []);
 
       // کمک برای گرفتن کد کشور
-      function getIsoCode(props: Record<string, any>) {
+      function getIsoCode(props: PropertiesProps) {
             return (
                   props.ISO_A2 ||
                   props.ISO_A3 ||
@@ -65,16 +74,19 @@ export default function GlobeClient() {
             if (!countries || !userCountryCode) return null;
 
             const userCountry = countries.find(
-                  (c) => getIsoCode(c.properties)?.toUpperCase() === userCountryCode
+                  (c) => {
+                        const code = getIsoCode(c.properties);
+                        return typeof code === "string" && code.toUpperCase() === userCountryCode;
+                  }
+
             );
             if (!userCountry) return null;
 
-            const coords = userCountry.geometry.coordinates;
             let latSum = 0,
                   lngSum = 0,
                   count = 0;
 
-            function processPolygon(polygon: any[]) {
+            function processPolygon(polygon: PolygonCoordinates) {
                   polygon[0].forEach(([lng, lat]: [number, number], i: number) => {
                         // فقط هر 10 نقطه یک بار برای کاهش محاسبات
                         if (i % 10 === 0) {
@@ -86,9 +98,10 @@ export default function GlobeClient() {
             }
 
             if (userCountry.geometry.type === "Polygon") {
-                  processPolygon(coords);
+                  processPolygon(userCountry.geometry.coordinates as PolygonCoordinates);
             } else if (userCountry.geometry.type === "MultiPolygon") {
-                  coords.forEach((poly: any) => processPolygon(poly));
+                  (userCountry.geometry.coordinates as MultiPolygonCoordinates)
+                        .forEach(poly => processPolygon(poly));
             }
 
             if (count === 0) return null;
@@ -107,7 +120,7 @@ export default function GlobeClient() {
             // کمی بعد شروع حرکت به سمت کشور کاربر
             const timer = setTimeout(() => {
                   if (centerCoords) {
-                        globeEl.current.pointOfView(
+                        globeEl.current?.pointOfView(
                               { lat: centerCoords.lat, lng: centerCoords.lng, altitude: 1.5 },
                               2000 // انیمیشن 2 ثانیه‌ای
                         );
@@ -134,11 +147,14 @@ export default function GlobeClient() {
                   width={size && size.width && size.width > 768 ? Number(size.width / 2) : undefined}
                   polygonAltitude={0.005}
                   polygonCapColor={(obj) => {
-                        const { properties } = obj as { properties: Record<string, any> };
-                        const iso = getIsoCode(properties)?.toUpperCase();
-                        return iso === userCountryCode
-                              ? "#FC8B14"
-                              : "rgba(120,120,120,0.6)";
+                        const properties = (obj as { properties: PropertiesProps }).properties;
+                        if (!properties) return "rgba(120,120,120,0.6)";
+
+                        const code = getIsoCode(properties);
+                        if (typeof code === "string" && code) {
+                              return code.toUpperCase() === userCountryCode ? "#FC8B14" : "rgba(120,120,120,0.6)";
+                        }
+                        return "rgba(120,120,120,0.6)";
                   }}
                   polygonSideColor={() => "rgba(0,0,0,0.25)"}
                   polygonStrokeColor={() => "#000000"}
