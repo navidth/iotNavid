@@ -3,12 +3,13 @@ import { ClipLoader } from 'react-spinners'
 
 type ReactLoading = {
       loading: boolean | undefined
+      size?: number | 50
 }
 
-const LoadingSpinner: React.FC<ReactLoading> = ({ loading }) => {
+const LoadingSpinner: React.FC<ReactLoading> = ({ loading, size = 50 }) => {
       return (
             <div className="flex items-center justify-center" >
-                  <ClipLoader size={50} color="#1447e6" loading={loading} aria-label="Loading Spinner"
+                  <ClipLoader size={size} color="#1447e6" loading={loading} aria-label="Loading Spinner"
                         data-testid="loader" />
             </div>
       )

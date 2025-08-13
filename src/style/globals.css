@@ -21,10 +21,12 @@
 }
 .text-asli{
   color: var(--font-color);
+  @apply hover:text-[#00d1ff];
 }
 .border-asli{
   border-color: var(--border);
 }
+
 
 body {
   overflow-x: hidden;

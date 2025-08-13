@@ -38,7 +38,7 @@ const NavbarMain = ({ items }: { items: MenuItems }) => {
                         id="navigationMain"
                         className={`flex-no-wrap sticky mt-8 mb-16 overflow-x-auto md:overflow-x-hidden md:hover:overflow-x-auto duration-300 z-[999] flex items-center justify-between py-5 bg-asli  ${isStuck ? "rounded-none w-screen top-24" : "top-16 md:rounded-full  mx-auto lg:w-[1069.600px] md:w-[550px] w-auto "} `} style={{ boxShadow: "rgba(80, 80, 80, 0.2) 0px 2px 8px 0px" }}>
                         <div className="ml-4">
-                              <p className="flex items-center gap-4 text-sm md:ps-10 ps-3 text-blue-500 ">
+                              <p className="flex items-center gap-4 text-sm md:ps-10 ps-3 text-[#00d1ff]">
                                     <span className="whitespace-nowrap" >
                                           یک صنعت را انتخاب کنید
                                     </span>
@@ -56,7 +56,7 @@ const NavbarMain = ({ items }: { items: MenuItems }) => {
                                     return (
                                           <li key={item.id} className="lg:mb-0 lg:pe-2">
                                                 <Link
-                                                      className="whitespace-nowrap text-white transition duration-200 hover:ease-in-out motion-reduce:transition-none lg:px-2 hover:text-blue-500 "
+                                                      className="whitespace-nowrap text-asli transition duration-200 hover:ease-in-out motion-reduce:transition-none lg:px-2  "
                                                       href={item.link}
                                                 >{item.label}</Link>
                                           </li>

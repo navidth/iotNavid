@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import Providers from "@/store/Providers";
 import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/common/Footer";
+import GlobalNotFound from "./global-not-found.";
 
 const iranSans = localFont({
   src: "../../public/fonts/IRANSans.ttf",

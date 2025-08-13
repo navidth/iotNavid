@@ -1,7 +1,16 @@
 import Image from "next/image"
 import image from "../../../public/images/satellite/Hod-Hod_2.jpg"
 import Link from "next/link"
-const Card = ({ data }) => {
+type CardProps = {
+      id: number,
+      link: string,
+      label: string,
+      about: string,
+      lunch: number,
+      lastPacket: number,
+      isActive: boolean
+}
+const Card = ({ data }: { data: CardProps }) => {
       return (
             <div className="max-w-xs bg-white border  border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                   <Link href={`/satellites/${data.link}`}>

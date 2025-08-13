@@ -13,20 +13,23 @@ function MenuDesktop({ menu, pathName }: { menu: MenuItems, pathName: string }) 
                         className="flex font-medium p-4 md:p-0 mt-4 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 "
                   >
                         {menu &&
-                              menu.map((item) => (
-                                    <li key={item.id}>
-                                          <Link
-                                                href={item.link}
-                                                className={`py-2 h-4 px-3 border-blue-600 hover:border-b-2 hover:text-blue-700 ${item.link === pathName
-                                                      ? "text-blue-500 border-b-2"
-                                                      : "text-asli"
-                                                      } `}
-                                                aria-current="page"
-                                          >
-                                                {item.label}
-                                          </Link>
-                                    </li>
-                              ))}
+                              menu.map((item) => {
+                                    if (!item.link) return false
+                                    return (
+                                          <li key={item.id}>
+                                                <Link
+                                                      href={item.link}
+                                                      className={`py-2 h-4 px-3 border-[#00d1ff] hover:border-b-2 hover:text-hover ${item.link === pathName
+                                                            ? "text-[#00d1ff] border-b-2"
+                                                            : "text-asli"
+                                                            } `}
+                                                      aria-current="page"
+                                                >
+                                                      {item.label}
+                                                </Link>
+                                          </li>
+                                    )
+                              })}
                   </ul>
             </div>
       )

@@ -5,7 +5,7 @@ import { IconType } from 'react-icons';
 const getButtonType = (type: ButtonProps["type"]) => {
       switch (type) {
             case "primary":
-                  return "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300";
+                  return "text-black bg-gradient-to-r from-[#00d1ff] to-[#6be5ff] focus:ring-4 focus:outline-none focus:ring-blue-300";
             case "secondary":
                   return "text-gray-700 bg-gray-300 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-gray-400";
             case "tertiary":

@@ -127,8 +127,8 @@ const page = () => {
                               </div>
                         </div>
                         <div className='flex items-center gap-8'>
-                              <Image src={image1} className='aspect-square' width={300} />
-                              <Image src={image2} className='aspect-square' width={300} />
+                              <Image src={image1} className='aspect-square' width={300} alt='asd' />
+                              <Image src={image2} className='aspect-square' width={300} alt='as' />
                         </div>
                   </div>
             </div>
